@@ -24,10 +24,10 @@ echo {1..22} | xargs -n 1 -P 12 bash -c 'generate_af "$@"' _
 # count variants using wrapper scripts
 for list in DD Eye Cancer Skin Cardiac
 do
-	./run_vep.sh $list
+	./scripts/run_vep.sh $list
 	for chr in {1..22}
 	do
-		./count_carriers.sh $list $chr $ukb_dir
+		./scripts/count_carriers.sh $list $chr $ukb_dir
 	done
 done
 
@@ -35,28 +35,28 @@ done
 for PREFIX in DD Eye Cancer Skin Cardiac
 do
 	# calculate REVEL quintiles
-	./calculate_revel_quantiles_${PREFIX}.sh
+	./scripts/calculate_revel_quantiles_${PREFIX}.sh
 
 	# then calculate total variants by summing over all chromosomes and all individuals
-	./sum_variants.pl --infile ${PREFIX} --outfile results/${PREFIX}_individual_counts_chrs_collated	# by individual
-	./sum_genes.pl --in ${PREFIX} --out results/${PREFIX}_gene_variant_counts --glist g2p_files/${PREFIX}G2P.csv	# by gene
-	./sum_variants_missense_lof.pl --infile ${PREFIX}_missense_lof --outfile results/${PREFIX}_individual_counts_chrs_collated_missense_lof --vep_rep ${PREFIX}	# missense and lof split
+	./scripts/sum_variants.pl --infile ${PREFIX} --outfile results/${PREFIX}_individual_counts_chrs_collated	# by individual
+	./scripts/sum_genes.pl --in ${PREFIX} --out results/${PREFIX}_gene_variant_counts --glist g2p_files/${PREFIX}G2P.csv	# by gene
+	./scripts/sum_variants_missense_lof.pl --infile ${PREFIX}_missense_lof --outfile results/${PREFIX}_individual_counts_chrs_collated_missense_lof --vep_rep ${PREFIX}	# missense and lof split
 
-	./sum_genes_all_transcripts.pl --in ${PREFIX}_all_transcripts --out results/${PREFIX}_all_transcripts_gene_variant_counts --glist g2p_files/${PREFIX}G2P.csv
-	./sum_genes_missense_lof.pl --in ${PREFIX}_missense_lof --out results/${PREFIX}_missense_lof_gene_variant_counts --glist g2p_files/${PREFIX}G2P.csv
+	./scripts/sum_genes_all_transcripts.pl --in ${PREFIX}_all_transcripts --out results/${PREFIX}_all_transcripts_gene_variant_counts --glist g2p_files/${PREFIX}G2P.csv
+	./scripts/sum_genes_missense_lof.pl --in ${PREFIX}_missense_lof --out results/${PREFIX}_missense_lof_gene_variant_counts --glist g2p_files/${PREFIX}G2P.csv
 	# clinvar
-	./sum_genes_clinvar.pl --in ${PREFIX}_clinvar --out results/${PREFIX}_clinvar_gene_variant_counts --glist g2p_files/${PREFIX}G2P.csv
-	./sum_variants_clinvar.pl --infile ${PREFIX}_clinvar --outfile results/${PREFIX}_individual_counts_chrs_collated_clinvar --vep_rep ${PREFIX}
+	./scripts/sum_genes_clinvar.pl --in ${PREFIX}_clinvar --out results/${PREFIX}_clinvar_gene_variant_counts --glist g2p_files/${PREFIX}G2P.csv
+	./scripts/sum_variants_clinvar.pl --infile ${PREFIX}_clinvar --outfile results/${PREFIX}_individual_counts_chrs_collated_clinvar --vep_rep ${PREFIX}
 	# revel
-	./sum_genes_revel.pl --in ${PREFIX}_revel --out results/${PREFIX}_revel_gene_variants_counts --glist g2p_files/${PREFIX}G2P.csv
+	./scripts/sum_genes_revel.pl --in ${PREFIX}_revel --out results/${PREFIX}_revel_gene_variants_counts --glist g2p_files/${PREFIX}G2P.csv
 	# clinvar and revel thresholds
-	./sum_variants_clinvar.pl --infile ${PREFIX}_clinvar_revel --outfile results/${PREFIX}_individual_counts_chrs_collated_clinvar_revel --vep_rep ${PREFIX}
+	./scripts/sum_variants_clinvar.pl --infile ${PREFIX}_clinvar_revel --outfile results/${PREFIX}_individual_counts_chrs_collated_clinvar_revel --vep_rep ${PREFIX}
 done
 
 PREFIX=Cancer
-./sum_genes.pl --in ${PREFIX} --out results/${PREFIX}_cases_gene_variant_counts --individuals cancer_cases --glist g2p_files/${PREFIX}G2P.csv
-./sum_genes.pl --in ${PREFIX} --out results/${PREFIX}_controls_gene_variant_counts --individuals cancer_controls --glist g2p_files/${PREFIX}G2P.csv
+./scripts/sum_genes.pl --in ${PREFIX} --out results/${PREFIX}_cases_gene_variant_counts --individuals cancer_cases --glist g2p_files/${PREFIX}G2P.csv
+./scripts/sum_genes.pl --in ${PREFIX} --out results/${PREFIX}_controls_gene_variant_counts --individuals cancer_controls --glist g2p_files/${PREFIX}G2P.csv
 
-./DDD_cohort/run_vep.sh $ddd_dir
+./scripts/DDD_cohort/run_vep.sh $ddd_dir
 
 Rscript render.R
