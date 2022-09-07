@@ -10,4 +10,4 @@ Genetics in Medicine
 https://doi.org/10.1016/j.gim.2022.06.008
 
 The commands to reproduce the analysis can be found in
-run_project.sh
+        run_project.sh
