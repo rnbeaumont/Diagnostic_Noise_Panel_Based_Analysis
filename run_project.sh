@@ -42,8 +42,6 @@ do
 	./scripts/sum_genes.pl --in ${PREFIX} --out results/${PREFIX}_gene_variant_counts --glist g2p_files/${PREFIX}G2P.csv	# by gene
 	./scripts/sum_variants_missense_lof.pl --infile ${PREFIX}_missense_lof --outfile results/${PREFIX}_individual_counts_chrs_collated_missense_lof --vep_rep ${PREFIX}	# missense and lof split
 
-	./scripts/sum_genes_all_transcripts.pl --in ${PREFIX}_all_transcripts --out results/${PREFIX}_all_transcripts_gene_variant_counts --glist g2p_files/${PREFIX}G2P.csv
-	./scripts/sum_genes_missense_lof.pl --in ${PREFIX}_missense_lof --out results/${PREFIX}_missense_lof_gene_variant_counts --glist g2p_files/${PREFIX}G2P.csv
 	# clinvar
 	./scripts/sum_genes_clinvar.pl --in ${PREFIX}_clinvar --out results/${PREFIX}_clinvar_gene_variant_counts --glist g2p_files/${PREFIX}G2P.csv
 	./scripts/sum_variants_clinvar.pl --infile ${PREFIX}_clinvar --outfile results/${PREFIX}_individual_counts_chrs_collated_clinvar --vep_rep ${PREFIX}
@@ -53,10 +51,13 @@ do
 	./scripts/sum_variants_clinvar.pl --infile ${PREFIX}_clinvar_revel --outfile results/${PREFIX}_individual_counts_chrs_collated_clinvar_revel --vep_rep ${PREFIX}
 done
 
+# separate UKBB cancer cases and controls
 PREFIX=Cancer
 ./scripts/sum_genes.pl --in ${PREFIX} --out results/${PREFIX}_cases_gene_variant_counts --individuals cancer_cases --glist g2p_files/${PREFIX}G2P.csv
 ./scripts/sum_genes.pl --in ${PREFIX} --out results/${PREFIX}_controls_gene_variant_counts --individuals cancer_controls --glist g2p_files/${PREFIX}G2P.csv
 
+# run analysis in DDD cohort
 ./scripts/DDD_cohort/run_vep.sh $ddd_dir
 
+# generate figures for manuscript
 Rscript render.R
